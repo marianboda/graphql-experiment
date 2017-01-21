@@ -1,24 +1,39 @@
 const { graphql, buildSchema } = require('graphql')
 
+const data = {
+  projects: [
+    {id: 1, name: 'Drogia'},
+    {id: 2, name: 'Projector'},
+    {id: 3, name: 'Sranda'}
+  ]
+}
+
 const schema = buildSchema(/* GraphQL */`
   type Query {
-    foo: String
+    projects: [Project]
   }
 
   type Schema {
     query: Query
   }
+
+  type Project {
+    id: Int,
+    name: String
+  }
 `)
 
 const resolvers = {
-  foo: () => ':)'
+  projects: () => data.projects,
 }
 
 const query = `
 query myFirstQuery {
-  foo
+  projects {
+    id
+  }
 }`
 
 graphql(schema, query, resolvers)
-  .then((result) => console.log(result))
+  .then((result) => console.log(JSON.stringify(result)))
   .catch((e) => console.log(e))
